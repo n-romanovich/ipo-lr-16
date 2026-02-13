@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PIRATE PUZZLES - Головоломки</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <h1>Наши товары:</h1>
+    {% for item in items %}
+    <div style="border: 1px solid #ccc; margin-bottom: 10px; padding: 10px;">
+        <h3>{{ item.name }}</h3>
+        <p><b>Цена:</b> {{ item.price }} BYN</p>
+        <p><i>Описание:</i> {{ item.description }}</p>
+    </div>
+    {% endfor %}
+
+    <div style="border: 1px solid #ccc; margin-bottom: 10px; padding: 10px;">
+        Подробнее о магазине: <br>
+        <a href="http://127.0.0.1:8000/about">КЛИК</a>
+    </div>
+</body>
+</html>
