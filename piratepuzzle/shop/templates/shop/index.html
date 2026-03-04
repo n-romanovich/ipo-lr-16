@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PIRATE PUZZLES</title>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #fcfcfc;
+        }
+        h1 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .item-box {
+            border: 1px solid #bbb;
+            border-radius: 10px;
+            margin: 10px;
+            padding: 15px;
+            width: 260px;
+            height: 420px;
+            display: inline-block;
+            vertical-align: top;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        .item-box img {
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+            display: block;
+            background: #f0f0f0;
+            border-radius: 6px;
+        }
+        h3 {
+            margin: 15px 0 10px 0;
+            height: 2.4em;
+            overflow: hidden;
+            font-size: 1.1em;
+        }
+        p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .description {
+            height: 3.6em;
+            overflow: hidden;
+            color: #666;
+        }
+        .instock { color: green; font-weight: bold; }
+        .nostock { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Наши головоломки:</h1>
+
+    {% for item in items %}
+    <div class="item-box">
+        {% if item.photo %}
+            <img src="{{ item.photo.url }}">
+        {% else %}
+            <div style="width:100%; height:160px; background:#eee; border-radius:6px;"></div>
+        {% endif %}
+        
+        <h3>{{ item.name }}</h3>
+        <p><b>Категория:</b> {{ item.category.name }}</p>
+        <p><b>Производитель:</b> {{ item.manufacturer.name }}</p>
+        <p><b>Цена:</b> {{ item.price }} BYN</p>
+        <p class="description">{{ item.description|truncatechars:80 }}</p>
+        
+        <p class="{% if item.stock > 0 %}instock{% else %}nostock{% endif %}">
+            Остаток: {{ item.stock }} шт.
+        </p>
+    </div>
+    {% endfor %}
+
+    <hr style="border: 0; border-top: 1px solid #ccc; margin-top: 20px;">
+    <div align="center">
+        <a href="/about" style="text-decoration: none; color: blue;">О магазине</a>
+    </div>
+</body>
+<footer>
+</footer>
+</html>
