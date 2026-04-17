@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from .models import Product
 
-#Главная страница магазина
+def index(request):
+    return render(request, 'shop/index.html')
+
+#Каталог магазина
 def home(request):
     items = Product.objects.all()
-    return render(request, 'shop/index.html', {'items': items})
+    return render(request, 'shop/catalog.html', {'items': items})
 
 #Страница об авторе лабы
 def about_us(request):
@@ -17,3 +20,4 @@ def about_shop(request):
 #Страница с ссылками на информацию об аторе и лр
 def about(request):
     return render(request, 'shop/about.html')
+
