@@ -1,2 +1,2 @@
 [build]
-root = "piratepuzzle"
+command = "cd piratepuzzle && python manage.py collectstatic --noinput"
