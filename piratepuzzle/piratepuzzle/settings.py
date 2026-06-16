@@ -14,9 +14,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure--8kabg4m=@*1&i(#!+*sx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
-# Добавляем домен Railway
-ALLOWED_HOSTS += ['*.up.railway.app']
+if os.environ.get('ALLOWED_HOSTS'):
+    ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
+else:
+    ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
 
 
 # Application definition
@@ -100,7 +103,7 @@ USE_TZ = True
 
 # Static files
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
@@ -121,11 +124,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-# Security cookies
 
-if not DEBUG:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
 
 
 # Django REST Framework

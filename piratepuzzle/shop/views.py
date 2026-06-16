@@ -1,4 +1,7 @@
+from pathlib import Path
+from django.http import FileResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.staticfiles import finders
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
@@ -261,4 +264,20 @@ def settings_view(request):
     for f in form.fields.values():
         f.widget.attrs['class'] = 'form-control'
     return render(request, 'shop/settings.html', {'form': form})
+
+
+#Раздача медиа-файлов в продакшне
+def media_serve(request, path):
+    file_path = Path(settings.MEDIA_ROOT, path)
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(open(file_path, 'rb'))
+    raise Http404
+
+
+#Раздача статики в продакшне (CSS/JS админки)
+def static_serve(request, path):
+    found = finders.find(path)
+    if found:
+        return FileResponse(open(found, 'rb'))
+    raise Http404
 

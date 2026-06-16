@@ -1,2 +1,0 @@
-[build]
-command = "cd piratepuzzle && python manage.py collectstatic --noinput"
