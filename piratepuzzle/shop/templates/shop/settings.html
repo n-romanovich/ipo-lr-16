@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Настройки — PIRATE PUZZLES{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Смена пароля</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <p class="mb-0">{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.old_password.id_for_label }}">{{ form.old_password.label }}</label>
+                        {{ form.old_password }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.new_password1.id_for_label }}">{{ form.new_password1.label }}</label>
+                        {{ form.new_password1 }}
+                        <div class="form-text">Минимум 8 символов</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.new_password2.id_for_label }}">{{ form.new_password2.label }}</label>
+                        {{ form.new_password2 }}
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">Сменить пароль</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

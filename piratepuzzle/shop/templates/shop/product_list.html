@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Каталог товаров - PIRATE PUZZLES</title>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #fcfcfc;
+        }
+        h1 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .filters {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .filters form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .filters select, .filters input {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .filters button {
+            padding: 6px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .filters button:hover {
+            background: #45a049;
+        }
+        .item-box {
+            border: 1px solid #bbb;
+            border-radius: 10px;
+            margin: 10px;
+            padding: 15px;
+            width: 260px;
+            height: 440px;
+            display: inline-block;
+            vertical-align: top;
+            background-color: white;
+            box-sizing: border-box;
+        }
+        .item-box img {
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+            display: block;
+            background: #f0f0f0;
+            border-radius: 6px;
+        }
+        h3 {
+            margin: 15px 0 10px 0;
+            height: 2.4em;
+            overflow: hidden;
+            font-size: 1.1em;
+        }
+        p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        .description {
+            height: 3.6em;
+            overflow: hidden;
+            color: #666;
+        }
+        .instock { color: green; font-weight: bold; }
+        .nostock { color: red; font-weight: bold; }
+        .add-btn {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        .add-btn:hover {
+            background: #0b7dda;
+        }
+        .detail-link {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #FF9800;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        .detail-link:hover {
+            background: #e68a00;
+        }
+        .cart-link {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #9C27B0;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .cart-link:hover {
+            background: #7B1FA2;
+        }
+        .no-items {
+            color: #999;
+            text-align: center;
+            font-size: 18px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Каталог головоломок</h1>
+
+    <a href="{% url 'cart_view' %}" class="cart-link">Корзина</a>
+
+    <!--Форма фильтрации и поиска-->
+    <div class="filters">
+        <form method="GET">
+            <select name="category">
+                <option value="">Все категории</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <select name="manufacturer">
+                <option value="">Все производители</option>
+                {% for man in manufacturers %}
+                    <option value="{{ man.id }}" {% if request.GET.manufacturer == man.id|stringformat:"s" %}selected{% endif %}>
+                        {{ man.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <input type="text" name="q" placeholder="Поиск..." value="{{ request.GET.q }}">
+
+            <button type="submit">Найти</button>
+        </form>
+    </div>
+
+    {% if items %}
+        {% for item in items %}
+        <div class="item-box">
+            {% if item.photo %}
+                <img src="{{ item.photo.url }}">
+            {% else %}
+                <div style="width:100%; height:160px; background:#eee; border-radius:6px;"></div>
+            {% endif %}
+
+            <h3>{{ item.name }}</h3>
+            <p><b>Категория:</b> {{ item.category.name }}</p>
+            <p><b>Производитель:</b> {{ item.manufacturer.name }}</p>
+            <p><b>Цена:</b> {{ item.price }} BYN</p>
+            <p class="description">{{ item.description|truncatechars:80 }}</p>
+
+            <p class="{% if item.stock > 0 %}instock{% else %}nostock{% endif %}">
+                Остаток: {{ item.stock }} шт.
+            </p>
+
+            <a href="{% url 'product_detail' pk=item.id %}" class="detail-link">Подробнее</a>
+            <a href="{% url 'add_to_cart' product_id=item.id %}" class="add-btn">В корзину</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-items">Товары не найдены</p>
+    {% endif %}
+
+    <hr style="border: 0; border-top: 1px solid #ccc; margin-top: 20px;">
+    <div align="center">
+        <a href="/about" style="text-decoration: none; color: blue;">О магазине</a>
+    </div>
+</body>
+</html>

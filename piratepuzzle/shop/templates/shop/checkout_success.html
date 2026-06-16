@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Заказ оформлен — PIRATE PUZZLES{% endblock %}
+{% block content %}
+
+<div class="text-center py-5">
+    <h1 class="mb-3">Заказ оформлен!</h1>
+    <p class="lead">Чек отправлен на вашу почту.</p>
+    <a href="{% url 'product_list' %}" class="btn btn-dark">В каталог</a>
+</div>
+
+{% endblock %}

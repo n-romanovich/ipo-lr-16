@@ -1,0 +1,13 @@
+/*Минимум кастомных стилей — почти всё на Bootstrap*/
+body {
+    background: #fff;
+}
+.product-card img {
+    height: 180px;
+    object-fit: contain;
+    padding: 10px;
+    background: #f5f5f5;
+}
+footer {
+    margin-top: auto;
+}

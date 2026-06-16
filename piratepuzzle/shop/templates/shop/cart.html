@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Корзина — PIRATE PUZZLES{% endblock %}
+{% block content %}
+
+<h1 class="mb-3">Корзина</h1>
+
+{% if items %}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Товар</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Стоимость</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.price }} BYN</td>
+                <td>
+                    <form method="POST" action="{% url 'update_cart' item_id=item.id %}" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="form-control" style="width:70px;">
+                        <button type="submit" class="btn btn-warning btn-sm">Обн.</button>
+                    </form>
+                </td>
+                <td>{{ item.item_price }} BYN</td>
+                <td>
+                    <a href="{% url 'remove_from_cart' item_id=item.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr class="table-secondary fw-bold">
+                <td colspan="3" class="text-end">Итого:</td>
+                <td colspan="2">{{ total }} BYN</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <p class="text-center text-muted py-5">Корзина пуста</p>
+{% endif %}
+
+<p>
+    <a href="{% url 'product_list' %}" class="btn btn-outline-dark">Продолжить покупки</a>
+    {% if items %}
+        <a href="{% url 'checkout' %}" class="btn btn-success">Оформить заказ</a>
+    {% endif %}
+</p>
+
+{% endblock %}

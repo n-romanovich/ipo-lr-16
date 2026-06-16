@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ product.name }} — PIRATE PUZZLES{% endblock %}
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Главная</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Каталог</a></li>
+        <li class="breadcrumb-item active">{{ product.name }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        {% if product.photo %}
+            <img src="{{ product.photo.url }}" class="img-fluid border" alt="{{ product.name }}" style="background:#f5f5f5; padding:20px;">
+        {% else %}
+            <div class="d-flex align-items-center justify-content-center border" style="height:400px; background:#eee;">
+                <span style="font-size:5em;">?</span>
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1>{{ product.name }}</h1>
+        <p class="text-muted">{{ product.category.name }} / {{ product.manufacturer.name }}</p>
+        <p class="fs-3 fw-bold">{{ product.price }} BYN</p>
+
+        <h5>Описание</h5>
+        <p>{{ product.description }}</p>
+
+        <p>
+            {% if product.stock > 0 %}
+                <span class="badge bg-success">В наличии: {{ product.stock }} шт.</span>
+            {% else %}
+                <span class="badge bg-danger">Нет в наличии</span>
+            {% endif %}
+        </p>
+
+        <p><strong>Производитель:</strong> {{ product.manufacturer.name }} ({{ product.manufacturer.country }})</p>
+
+        {% if product.stock > 0 %}
+            <a href="{% url 'add_to_cart' product_id=product.id %}" class="btn btn-dark">В корзину</a>
+        {% else %}
+            <button class="btn btn-secondary" disabled>Нет в наличии</button>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

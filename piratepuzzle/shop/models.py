@@ -2,6 +2,9 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 #Модель категории товара
 class Category(models.Model):
@@ -71,3 +74,49 @@ class CartItem(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
+
+#Модель заказа пользователя
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    address = models.TextField(verbose_name="Адрес доставки")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата заказа")
+    total_price = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Общая стоимость")
+
+    def __str__(self):
+        return f"Заказ #{self.id} — {self.user.username}"
+
+
+#Модель товара в заказе
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name="Заказ")
+    product_name = models.CharField(max_length=200, verbose_name="Название товара")
+    quantity = models.PositiveIntegerField(verbose_name="Количество")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена за единицу")
+
+    def __str__(self):
+        return f"{self.product_name} x {self.quantity}"
+
+    def item_price(self):
+        return self.price * self.quantity
+
+
+#Модель профиля пользователя
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    full_name = models.CharField(max_length=200, verbose_name="ФИО", blank=True)
+    phone = models.CharField(max_length=20, verbose_name="Телефон", blank=True)
+    address = models.TextField(verbose_name="Адрес доставки", blank=True)
+    favorite_category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Любимая категория")
+    city = models.CharField(max_length=100, verbose_name="Город доставки", blank=True)
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name="Аватар")
+
+    def __str__(self):
+        return f"Профиль {self.user.username}"
+
+
+#Сигнал — при создании пользователя автоматически создаётся профиль
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)

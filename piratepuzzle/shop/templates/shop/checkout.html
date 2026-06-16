@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Оформление заказа — PIRATE PUZZLES{% endblock %}
+{% block content %}
+
+<h1 class="mb-3">Оформление заказа</h1>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="table-responsive mb-3">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Товар</th>
+                <th>Количество</th>
+                <th>Цена</th>
+                <th>Стоимость</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price }} BYN</td>
+                <td>{{ item.item_price }} BYN</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<p class="fw-bold fs-5">Итого: {{ total }} BYN</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label"><b>Адрес доставки</b></label>
+        <textarea name="address" class="form-control" rows="3" placeholder="Введите адрес доставки" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Подтвердить заказ</button>
+</form>
+
+{% endblock %}

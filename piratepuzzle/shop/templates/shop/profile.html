@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Личный кабинет — PIRATE PUZZLES{% endblock %}
+{% block content %}
+
+<h1 class="mb-4">Личный кабинет</h1>
+
+<div class="row">
+    <!--Блок профиля-->
+    <div class="col-md-5 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Профиль</h5>
+            </div>
+            <div class="card-body" id="profileInfo">
+                <div class="text-center mb-3">
+                    <div class="spinner-border text-warning" role="status"></div>
+                    <p class="mt-2 text-muted">Загрузка...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Форма редактирования профиля-->
+    <div class="col-md-7 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Редактировать профиль</h5>
+            </div>
+            <div class="card-body">
+                <form id="profileForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">ФИО</label>
+                        <input type="text" name="full_name" id="inputFullName" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Телефон</label>
+                        <input type="text" name="phone" id="inputPhone" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Город доставки</label>
+                        <input type="text" name="city" id="inputCity" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Адрес доставки</label>
+                        <textarea name="address" id="inputAddress" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Любимая категория</label>
+                        <select name="favorite_category" id="inputFavoriteCategory" class="form-select">
+                            <option value="">— Не выбрана —</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="profileSaveMessage"></div>
+                    <button type="submit" class="btn btn-dark">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Блок моих заказов-->
+<div class="card shadow-sm mt-2">
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">Мои заказы</h5>
+    </div>
+    <div class="card-body" id="ordersContainer">
+        <div class="text-center">
+            <div class="spinner-border text-warning" role="status"></div>
+            <p class="mt-2 text-muted">Загрузка заказов...</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<!--Модалка для деталей заказа-->
+<div class="modal fade" id="orderModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Детали заказа</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="orderModalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}
